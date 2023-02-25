@@ -99,11 +99,11 @@ class User {
         }
     }
 
-    async getRiwayatStudy(req: Request, _res: Response, _next: NextFunction): Promise<void> {
+    async getRiwayatStudy(req: Request, res: Response, next: NextFunction): Promise<void> {
 
         const browser: Browser = await puppeteer.launch({
-            // args: ['--no-sandbox', '--disable-setuid-sandbox'],
-            headless: false
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            // headless: false
         });
         const page = await browser.newPage();
 
@@ -118,17 +118,36 @@ class User {
 
         // get Data
         const riwayatStudy = await page.evaluate(() => {
-            // got all tbody as array
-            const table = Array.from( document.querySelectorAll('td') );
-            // const data = table.map( (item: any) => {
 
-            // }
+            const tableMataKuliahDone = Array.from(document.querySelectorAll('#content > section > div.row > div:nth-child(1) > section > div > table > tbody > tr')); // Mata kuliah sudah diambil
+            const dataMataKuliahDone = tableMataKuliahDone.map((item: any) => ({
+                semester: item.querySelector('td:nth-child(1)').innerText,
+                mataKuliah: item.querySelector('td:nth-child(2)').innerText,
+                sks: item.querySelector('td:nth-child(3)').innerText,
+                nilai: item.querySelector('td:nth-child(4)').innerText,
+            }));
 
-            return table;
+            const tabelMataKuliahWajib = Array.from(document.querySelectorAll('#content > section > div.row > div:nth-child(2) > section > div > table > tbody > tr')); // Mata kuliah wajib
+            const dataMataKuliahWajib = tabelMataKuliahWajib.map((item: any) => ({
+                mataKuliah: item.querySelector('td:nth-child(1)').innerText,
+                sks: item.querySelector('td:nth-child(2)').innerText,
+                finished: item.querySelector('td:nth-child(1)').closest('tr').classList.contains('text-default')
+            }));
+
+            return {
+                mataKuliahDone: dataMataKuliahDone,
+                mataKuliahWajib: dataMataKuliahWajib
+            }
 
         });
+        
+        await browser.close();
 
-        console.log(riwayatStudy);
+        try {
+            res.status(200).json(riwayatStudy);
+        } catch (error) {
+            next (error);
+        }
 
     }
 }
