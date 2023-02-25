@@ -1,6 +1,5 @@
 import { Page } from 'puppeteer';
 import { baseUrl } from './baseUrl';
-// import fs from 'fs';
 
 const login = async (page: Page, username: string, password: string) => {
 
