@@ -59,6 +59,25 @@ class Kelas {
 
     }
 
+    async getMyKelas(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const browser: Browser = await puppeteer.launch({
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        });
+
+        const page = await browser.newPage();
+
+        const username = req.body.username;
+        const password = req.body.password;
+
+        await login(page, username, password);
+
+        try {
+            res.status(200).json({message: "getMyKelas"});
+        } catch (error) {
+            next (error);
+        }
+    }
+
 }
 
 export default Kelas;

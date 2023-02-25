@@ -4,6 +4,7 @@ import { errorHandler } from './middleware/errorHandler';
 
 import UserRouter from './app/User/Route';
 import KelasRouter from './app/Kelas/Route';
+import KeuanganRouter from './app/Keuangan/Route';
 
 const app = express();
 
@@ -17,7 +18,8 @@ app.get('/', (_req, res) => {
 
 app.use('/api/', [
     UserRouter,
-    KelasRouter
+    KelasRouter,
+    KeuanganRouter
 ]);
 
 app.use(notFound);
