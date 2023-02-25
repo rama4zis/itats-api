@@ -21,15 +21,18 @@ class Keuangan {
         await page.waitForSelector('.toolbar > a[href="/krs/mahasiswa/keuangan"');
         await page.click('.toolbar > a[href="/krs/mahasiswa/keuangan"');
 
-        await page.waitForSelector('#content');        
+        await page.waitForSelector('#content');
+
+        const spp = await page.$eval("#content > section > div.col-lg-4 > section > table > tbody > tr:nth-child(1) > td:nth-child(1) > ul > li:nth-child(1)", (el) => el?.innerHTML?.split("<br>").pop()?.trim()).catch(() => "Tidak ada tunggakan");
+        const denda = await page.$eval("#content > section > div.col-lg-4 > section > table > tbody > tr:nth-child(1) > td:nth-child(1) > ul > li:nth-child(2)", (el) => el?.innerHTML?.split("<br>").pop()?.trim()).catch(() => "Tidak ada denda");
 
         // get tagihan data
         const tagihanData = {
             lunas: await page.$eval("#content > section > div.col-lg-4 > div:nth-child(2) > div:nth-child(1) > section > div > h5 > strong", (el) => el?.innerText),
             tunggakan: await page.$eval("#content > section > div.col-lg-4 > div:nth-child(2) > div:nth-child(2) > section > div > h5 > strong", (el) => el?.innerText),
             keterangan: {
-                spp: await page.$eval("#content > section > div.col-lg-4 > section > table > tbody > tr:nth-child(1) > td:nth-child(1) > ul > li:nth-child(1)", (el) => el?.innerHTML.split("<br>").pop()?.trim()),
-                denda: await page.$eval("#content > section > div.col-lg-4 > section > table > tbody > tr:nth-child(1) > td:nth-child(1) > ul > li:nth-child(2)", (el) => el?.innerHTML.split("<br>").pop()?.trim()),
+                spp: spp,
+                denda: denda
             }
         }
 
