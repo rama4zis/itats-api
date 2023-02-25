@@ -6,7 +6,6 @@ import { Request, Response, NextFunction } from 'express';
 class User {
     async getUser(req: Request, res: Response, next: NextFunction): Promise<void> {
 
-
         const browser: Browser = await puppeteer.launch({
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
             // headless: false
@@ -98,6 +97,39 @@ class User {
         } catch (error) {
             next(error);
         }
+    }
+
+    async getRiwayatStudy(req: Request, _res: Response, _next: NextFunction): Promise<void> {
+
+        const browser: Browser = await puppeteer.launch({
+            // args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            headless: false
+        });
+        const page = await browser.newPage();
+
+        const username = req.body.username;
+        const password = req.body.password;
+
+        await login(page, username, password);
+
+        // Open Riwayat Study
+        await page.waitForSelector('.toolbar > a[href="/krs/nilai/riwayat"');
+        await page.click('.toolbar > a[href="/krs/nilai/riwayat"');
+
+        // get Data
+        const riwayatStudy = await page.evaluate(() => {
+            // got all tbody as array
+            const table = Array.from( document.querySelectorAll('td') );
+            // const data = table.map( (item: any) => {
+
+            // }
+
+            return table;
+
+        });
+
+        console.log(riwayatStudy);
+
     }
 }
 
