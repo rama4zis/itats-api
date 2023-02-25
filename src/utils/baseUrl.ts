@@ -1,0 +1,1 @@
+export const baseUrl = 'https://sim.itats.ac.id/krs/'
