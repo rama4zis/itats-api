@@ -3,25 +3,15 @@ const puppeteer = require('puppeteer');
 import login from '../../utils/login';
 import { Request, Response, NextFunction } from 'express';
 
-// const baseUrl = 'https://sim.itats.ac.id/krs/';
-
 class User {
     async getUser(req: Request, res: Response, next: NextFunction): Promise<void> {
 
-        // const username = "13.2017.1.00612";
-        // const password = "1999-10-01";
 
         const browser: Browser = await puppeteer.launch({
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
             // headless: false
         });
         const page = await browser.newPage();
-
-        // await page.goto(baseUrl);
-
-        // await page.type('#inputUsername', username, { delay: 100 });
-        // await page.type('#inputPassword', password, { delay: 100 });
-        // await page.keyboard.press('Enter');
 
         const username = req.body.username;
         const password = req.body.password;
